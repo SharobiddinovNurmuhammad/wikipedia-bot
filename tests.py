@@ -14,7 +14,7 @@ async def wikiloops(arr: list, text='', count=0)-> str:
     return text
 
 async def wikiresult(msg: str) -> str:
-    text = f"-<b>{msg}</b>\n\n"
+    text = f"<b>{msg}</b>\n\n"
     text += wikipedia.summary(msg)
     return text
 
