@@ -29,7 +29,7 @@ async def wikibot(message: types.Message):
 @dp.callback_query_handler()
 async def wikipages(call: types.CallbackQuery):
     text = call.data
-    print(text)
+    await call.answer(text="⏳Biroz kutib turing maqola qidirilmoqda...")
     text = await wikiresult(text)
     await call.message.answer(text, parse_mode='HTML')
 
