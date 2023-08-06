@@ -1,7 +1,7 @@
 import logging
 from config import API_TOKEN
 from aiogram import Bot, Dispatcher, executor, types
-from keyboards import wikisearchbtn
+from keyboards import wikiSearchBtn
 from functions import wikisearch, wikiloops, wikiresult
 
 
@@ -29,18 +29,24 @@ async def wikibot(message: types.Message):
     msg = message.text
     arr = await wikisearch(msg)
     text = await wikiloops(arr)
-    if len(wikisearchbtn(arr)['inline_keyboard']) == 0:
+    if len(wikiSearchBtn(arr)['inline_keyboard']) == 0:
         await message.answer("Bunday kalit so'zga oid maqola topilmadi!")
     else:
-        await message.answer(text=text, reply_markup=wikisearchbtn(arr), parse_mode='HTML')
+        await message.answer(text=text, reply_markup=wikiSearchBtn(arr), parse_mode='HTML')
         
 
 @dp.callback_query_handler()
 async def wikipages(call: types.CallbackQuery):
     text = call.data
     await call.answer(text="⏳Biroz kutib turing maqola qidirilmoqda...")
-    text = await wikiresult(text)
-    await call.message.answer(text, parse_mode='HTML')
+    arr = await wikiresult(text)
+    url = f"\n\n👉<b><a href='{arr[2]}'>To'liq o'qish</a></b>"
+    text = arr[0] + arr[1] + url 
+    if len(text) < 4096:
+        await call.message.answer(text, parse_mode='HTML')
+    else:
+        text = f"Xabar matni juda uzun...\n👉<b><a href='{arr[2]}'>To'liq o'qish</a></b>"
+        await call.message.answer(text=text, parse_mode='HTML')
 
 
 if __name__ == '__main__':
